@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3001;
 const routes = require('./routes/api');
 
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/mern-app', {
+mongoose.connect("mongodb+srv://shiva123:shiva123@shivaprasad-l5j7k.mongodb.net/test?retryWrites=true&w=majority" || 'mongodb://localhost/mern-app', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
