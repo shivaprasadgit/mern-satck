@@ -10,9 +10,9 @@ const BlogPost = require('../models/blogPost');
 router.get('/',(req,res)=>{
     
      BlogPost.find({}).then((data)=>{
-        console.log('data:',data);
+        // console.log('Data:',data);
         res.json(data)
-     }).catch((error)=>{console.log('error', error)});
+     }).catch((error)=>{console.log('error:', error)});
     //  res.json(data);
      });
     
