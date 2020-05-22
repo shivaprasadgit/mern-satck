@@ -1,67 +1,42 @@
-const express=require('express');
-const mongoose=require('mongoose');
-const morgan=require('morgan');
-const path=require('path')
+// Import npm packages
+const express = require('express');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const cors=require('cors');
+const path = require('path');
 
-const app=express();
-const PORT=process.env.PORT || 3001
-// const MONGODB_URI="mongodb+srv://shiva123:shiva123@shivaprasad-l5j7k.mongodb.net/test?retryWrites=true&w=majority"
-    
-// mongoose.connect(MONGODB_URI || 'mongodb://localhost/mern-app',{
-    mongoose.connect('mongodb://localhost/mern-app',{
-        
-    useNewUrlParserL:true,
-    useUnifiedTopology:true
+const app = express();
+const PORT = process.env.PORT || 3001; // Step 1
 
-});
-mongoose.connection.on('connected',()=>{
-    console.log('mongodb is connected successfuly')
+const routes = require('./routes/api');
+
+// Step 2
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/mern_youtube', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
 
-const Schema=mongoose.Schema;
-const BlogPostSchema=new Schema({
-    title:String,
-    body:String,
-    date:{
-        type:String,
-        default:Date.now()
-    }
-})
-const BlogPost=mongoose.model('BlogPost',BlogPostSchema);
-const data={
-    title:'mern-stak class',
-    body:'practice more'
+mongoose.connection.on('connected', () => {
+    console.log('Mongoose is connected!!!!');
+});
+
+// Data parsing
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Step 3
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
 }
-const newBlogPost=new BlogPost(data);
-// newBlogPost.save((error)=>{
-// if(error){
-//     console.log('something went wrong');
-//     }else{
-//         console.log('data saved successfuly');
-//     }
-// })
 
-app.use(morgan('tiny'))
 
-app.get('/',(req,res)=>{
-const data={
-    nameL:'shiva',
-    place:'anantapur'
-    
-};
- BlogPost.find({}).then((data)=>{
-    console.log('data:',data);
-    res.send(data)
- }).catch((error)=>{console.log('error', error)});
-//  res.json(data);
- });
+// HTTP request logger
+app.use(cors());
+app.use(morgan('tiny'));
+app.use('/api', routes);
 
-app.get('/api',(req,res)=>{
-    const data={
-        name:'nagarjuna',
-        place:'anantapur'
-    }
-    res.json(data);
-    });
 
-app.listen(PORT,console.log(`server is running successfully on port ${PORT}`))    
+
+
+app.listen(PORT, console.log(`Server is starting at ${PORT}`));
