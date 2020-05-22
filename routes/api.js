@@ -18,8 +18,23 @@ router.get('/',(req,res)=>{
     
      router.post('/save',(req,res)=>{
        console.log('body:',req.body);
-        res.json({msg:'we received your data'});
+       const data=req.body;
+        const newBlogPost= new BlogPost(data)
+          newBlogPost.save((error)=>{
+              if(error){
+                  res.status(500).json({
+                      msg:'your data is not stored in the database'
+                  })
+                  return;
+              }
+              else{
+                 return res.status(200).json({
+                      msg:'your data has been saved !!!'
+                  });
+              }
+          });
         });
+       
     router.get('/name',(req,res)=>{
         const data={
             name:'nagarjuna',
